@@ -26,3 +26,32 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Hide scrollbars for Flowbite Carousel */
+[data-testid="carousel"] {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+[data-testid="carousel"]::-webkit-scrollbar {
+  display: none !important;
+}
+
+.flowbite-carousel {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.flowbite-carousel::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Hide scrollbars for any carousel container */
+[class*="carousel"] {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+[class*="carousel"]::-webkit-scrollbar {
+  display: none !important;
+}
