@@ -1,12 +1,22 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { CarouselHome } from '../CarrouselHome';
 import { jest } from '@jest/globals';
 
+interface CarouselProps {
+  children: React.ReactNode;
+  slideInterval?: number;
+  slide?: boolean;
+  indicators?: boolean;
+  leftControl?: React.ReactNode;
+  rightControl?: React.ReactNode;
+  [key: string]: unknown;
+}
+
 // Mock flowbite-react Carousel component
 jest.mock('flowbite-react', () => ({
-  Carousel: ({ children, slideInterval, slide, indicators, leftControl, rightControl, ...props }: any) => {
+  Carousel: ({ children, slideInterval }: CarouselProps) => {
     const [currentSlide, setCurrentSlide] = React.useState(0);
     const slides = React.Children.toArray(children);
     
@@ -27,7 +37,7 @@ jest.mock('flowbite-react', () => ({
         const interval = setInterval(nextSlide, slideInterval);
         return () => clearInterval(interval);
       }
-    }, [slideInterval]);
+    }, [slideInterval, nextSlide]);
     
     return (
       <div data-testid="carousel" {...props}>

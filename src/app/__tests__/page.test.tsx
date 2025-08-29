@@ -5,7 +5,7 @@ import { jest } from '@jest/globals';
 // Mock next/image
 jest.mock('next/image', () => ({
   __esModule: true,
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} alt={props.alt || ''} />,
 }));
 
 // Mock next/link

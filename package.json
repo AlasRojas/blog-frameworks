@@ -11,6 +11,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@vercel/postgres": "^0.10.0",
     "autoprefixer": "^10.4.21",
     "flowbite": "^3.1.2",
     "flowbite-react": "^0.12.7",
