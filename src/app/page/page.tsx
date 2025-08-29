@@ -8,67 +8,100 @@ export default function Entry() {
   const [openModal, setOpenModal] = useState(false);
 
   return (
-    <div className="grid">
-      <h2 className="text-4xl font-extrabold dark:text-white">Title 123</h2>
-      <h3 className="text-3xl font-extrabold dark:text-white">Explicación Técnica</h3>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam unde suscipit, exercitationem eveniet repellat soluta molestiae autem, quo harum provident, praesentium adipisci laborum debitis doloremque dolorum ut! Quas, ex veniam.</p>
-      <h3 className="text-3xl font-extrabold dark:text-white">Explicación Ejemplificada</h3>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt perspiciatis rem tenetur ratione, mollitia deleniti magni rerum quasi voluptatem cum officia. Dolore culpa eveniet voluptatem praesentium suscipit? Consequuntur, possimus unde.</p>
-      <h3 className="text-3xl font-extrabold dark:text-white">Tabla comparativa</h3>
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <Table>
-          <thead className="text-xs text-gray-700 uppercase dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3 bg-gray-50 dark:bg-gray-800">Framework</th>
-              <th scope="col" className="px-6 py-3">Diferencias</th>
-              <th scope="col" className="px-6 py-3 bg-gray-50 dark:bg-gray-800 ">Similitudes</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-gray-200 dark:border-gray-700">
-              <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">Angular</th>
-              <td className="px-6 py-4">Valor 1</td>
-              <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">Valor 2</td>
-            </tr>
-            <tr className="border-b border-gray-200 dark:border-gray-700">
-              <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">React</th>
-              <td className="px-6 py-3">Valor 3</td>
-              <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">Valor 4</td>
-            </tr>
-            <tr className="border-b border-gray-200 dark:border-gray-700">
-              <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">Vue</th>
-              <td className="px-6 py-3">Valor 5</td>
-              <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">Valor 6</td>
-            </tr>
-          </tbody>
-        </Table>
+    <div className="container mx-auto px-4 py-8 max-w-screen-xl">
+      <h1 className="text-5xl font-extrabold mb-8 text-center text-blue-700 dark:text-blue-400 border-b-2 border-blue-200 pb-4">Title 123</h1>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+        <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+          <h2 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white border-l-4 border-blue-500 pl-3">Explicación Técnica</h2>
+          <p className="text-justify text-gray-700 dark:text-gray-300 leading-relaxed">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam unde suscipit, exercitationem eveniet repellat soluta molestiae autem, quo harum provident, praesentium adipisci laborum debitis doloremque dolorum ut! Quas, ex veniam.
+          </p>
+        </div>
+        
+        <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+          <h2 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white border-l-4 border-green-500 pl-3">Explicación Ejemplificada</h2>
+          <p className="text-justify text-gray-700 dark:text-gray-300 leading-relaxed">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt perspiciatis rem tenetur ratione, mollitia deleniti magni rerum quasi voluptatem cum officia. Dolore culpa eveniet voluptatem praesentium suscipit? Consequuntur, possimus unde.
+          </p>
+        </div>
       </div>
       
-      <h3 className="text-3xl font-extrabold dark:text-white">Referencia código</h3>
-      <Button>Angular</Button>
-      <Button>React</Button>
-      <Button>Vue</Button>
-      <h3 className="text-3xl font-extrabold dark:text-white">Comparación de código</h3>
-      <form action="#">
-        <label htmlFor="option1" defaultValue="1" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an option</label>
-        <Select>
-          <option value="0">Choose a country</option>
-          <option value="1">Angular</option>
-          <option value="2">React</option>
-          <option value="3">Vue</option>
-        </Select>
+      <div className="mb-10">
+        <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white border-l-4 border-purple-500 pl-3">Tabla comparativa</h2>
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <Table striped hoverable>
+            <thead>
+              <tr>
+                <th className="bg-gray-100 dark:bg-gray-800">Framework</th>
+                <th>Diferencias</th>
+                <th className="bg-gray-100 dark:bg-gray-800">Similitudes</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y dark:divide-gray-700">
+              <tr className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                <td className="whitespace-nowrap font-medium text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700">Angular</td>
+                <td>Valor 1</td>
+                <td className="bg-gray-50 dark:bg-gray-700">Valor 2</td>
+              </tr>
+              <tr className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                <td className="whitespace-nowrap font-medium text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700">React</td>
+                <td>Valor 3</td>
+                <td className="bg-gray-50 dark:bg-gray-700">Valor 4</td>
+              </tr>
+              <tr className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                <td className="whitespace-nowrap font-medium text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700">Vue</td>
+                <td>Valor 5</td>
+                <td className="bg-gray-50 dark:bg-gray-700">Valor 6</td>
+              </tr>
+            </tbody>
+          </Table>
+        </div>
+      </div>
+      
+      <div className="mb-10">
+        <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white border-l-4 border-yellow-500 pl-3">Referencia código</h2>
+        <div className="flex flex-wrap gap-4 justify-center">
+          <Button color="blue" className="w-auto px-6">Angular</Button>
+          <Button color="green" className="w-auto px-6">React</Button>
+          <Button color="purple" className="w-auto px-6">Vue</Button>
+        </div>
+      </div>
+      
+      <div className="mb-10">
+        <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white border-l-4 border-red-500 pl-3">Comparación de código</h2>
+        <form className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label htmlFor="option1" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccionar framework 1</label>
+              <Select id="option1" className="w-full">
+                <option value="0">Seleccionar framework</option>
+                <option value="1">Angular</option>
+                <option value="2">React</option>
+                <option value="3">Vue</option>
+              </Select>
+            </div>
+            
+            <div>
+              <label htmlFor="option2" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccionar framework 2</label>
+              <Select id="option2" className="w-full">
+                <option value="0">Seleccionar framework</option>
+                <option value="1">Angular</option>
+                <option value="2">React</option>
+                <option value="3">Vue</option>
+              </Select>
+            </div>
+          </div>
+          
+          <div className="flex justify-center">
+            <Button color="blue" className="w-auto px-8">Comparar</Button>
+          </div>
+        </form>
+      </div>
 
-        <label htmlFor="option2" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an option</label>
-        <Select>
-          <option value="0">Choose a country</option>
-          <option value="1">Angular</option>
-          <option value="2">React</option>
-          <option value="3">Vue</option>
-        </Select>
-        <Button>Comparar</Button>
-      </form>
-
-      <Button onClick={() => setOpenModal(true)}>Toggle modal</Button>
+      <div className="flex justify-center mt-8">
+        <Button color="purple" className="w-auto px-8" onClick={() => setOpenModal(true)}>Abrir modal</Button>
+      </div>
 
       <ModalComponent isOpen={openModal} handleClose={(value) => setOpenModal(value)}>
         <div className="space-y-6">
