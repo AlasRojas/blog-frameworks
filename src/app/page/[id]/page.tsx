@@ -110,7 +110,7 @@ export default function TopicPage() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-screen-xl">
       {/* Header */}
-      <div className="bg-white shadow-sm">
+      <div className="shadow-sm">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <Link 
             href="/"
@@ -118,7 +118,7 @@ export default function TopicPage() {
           >
             ← Volver al Inicio
           </Link>
-          <h1 className="text-5xl font-extrabold mb-8 text-center text-blue-700 dark:text-blue-400 border-b-2 border-blue-200 pb-4">{topic.titulo}</h1>
+          <h1 className="text-4xl font-bold mb-6 text-center text-gray-900 dark:text-white">{topic.titulo}</h1>
         </div>
       </div>
 
@@ -140,55 +140,41 @@ export default function TopicPage() {
               <p className="text-justify text-gray-700 dark:text-gray-300 leading-relaxed">{topic.explicacion_ejemplo}</p>
             </div>
           </Card>
-      </div>
-
-        {/* Librerías */}
-        <Card className="mb-8">
-          <div className="p-6">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Librerías Relacionadas</h2>
-            <div className="flex flex-wrap gap-3">
-              {topic.librerias.map((lib, index) => (
-                <span 
-                  key={index}
-                  className="px-3 py-2 bg-blue-100 text-blue-800 text-sm font-medium rounded-full"
-                >
-                  {lib}
-                </span>
-              ))}
-            </div>
-          </div>
-        </Card>
+        </div>
 
         {/* Tabla Comparativa */}
         {topic.table_elements && Object.keys(topic.table_elements).length > 0 && (
-          <Card className="mb-8">
+          <Card className="mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-md">
             <div className="p-6">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">Comparación entre Frameworks</h2>
+              <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white border-l-4 border-blue-500 pl-3">Comparación entre Frameworks</h2>
               <div className="overflow-x-auto">
-                <Table striped hoverable>
-                  <thead>
-                    <tr>
-                      <th className="bg-gray-100 dark:bg-gray-800">Framework</th>
-                      <th>Similitudes</th>
-                      <th className="bg-gray-100 dark:bg-gray-800">Diferencias</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y dark:divide-gray-700">
+                <div className="min-w-full bg-white dark:bg-gray-800 rounded-lg">
+                  <div className="grid grid-cols-1 gap-4">
                     {Object.entries(topic.table_elements).map(([framework, data]) => (
-                      <tr key={framework} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                        <td className="whitespace-nowrap font-medium text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 capitalize">
-                          {framework}
-                        </td>
-                        <td className="text-gray-700 dark:text-gray-300">
-                          {data.similitudes}
-                        </td>
-                        <td className="bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
-                          {data.diferencias}
-                        </td>
-                      </tr>
+                      <div key={framework} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow">
+                        <div className="mb-3">
+                          <span className="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm font-semibold rounded-full capitalize">
+                            {framework}
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <h4 className="font-semibold text-green-700 dark:text-green-400 mb-2">✓ Similitudes</h4>
+                            <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                              {data.similitudes}
+                            </p>
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-orange-700 dark:text-orange-400 mb-2">⚡ Diferencias</h4>
+                            <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                              {data.diferencias}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     ))}
-                  </tbody>
-                </Table>
+                  </div>
+                </div>
               </div>
             </div>
           </Card>
@@ -198,23 +184,40 @@ export default function TopicPage() {
         {topic.code_exemple && Object.keys(topic.code_exemple).length > 0 && (
           <Card>
             <div className="p-6">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">Ejemplos de Código</h2>
+              <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white border-l-4 border-blue-500 pl-3">Librerías Relacionadas y Ejemplos Básicos de Código</h2>
               
               {/* Framework Selector */}
               <div className="flex space-x-2 mb-4">
-                {Object.keys(topic.code_exemple).map((framework) => (
-                  <button
-                    key={framework}
-                    onClick={() => setSelectedFramework(framework as 'react' | 'vue' | 'angular')}
-                    className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
-                      selectedFramework === framework
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
-                  >
-                    {framework.charAt(0).toUpperCase() + framework.slice(1)}
-                  </button>
-                ))}
+                {Object.keys(topic.code_exemple).map((framework) => {
+                  const getFrameworkClasses = (fw: string, isSelected: boolean) => {
+                    const baseClasses = 'px-4 py-2 rounded-lg font-medium transition-all duration-200';
+                    
+                    if (isSelected) {
+                      switch (fw) {
+                        case 'angular':
+                          return `${baseClasses} bg-gradient-to-r from-red-600 to-red-400 text-white shadow-lg`;
+                        case 'react':
+                          return `${baseClasses} bg-gradient-to-r from-cyan-400 to-blue-500 text-white shadow-lg`;
+                        case 'vue':
+                          return `${baseClasses} bg-gradient-to-r from-green-400 to-green-600 text-white shadow-lg`;
+                        default:
+                          return `${baseClasses} bg-blue-600 text-white shadow-lg`;
+                      }
+                    }
+                    
+                    return `${baseClasses} bg-gray-200 text-gray-700 hover:bg-gray-300`;
+                  };
+                  
+                  return (
+                    <button
+                      key={framework}
+                      onClick={() => setSelectedFramework(framework as 'react' | 'vue' | 'angular')}
+                      className={getFrameworkClasses(framework, selectedFramework === framework)}
+                    >
+                      {framework.charAt(0).toUpperCase() + framework.slice(1)}
+                    </button>
+                  );
+                })}
               </div>
 
               {/* Code Display */}

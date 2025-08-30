@@ -4,9 +4,52 @@ import Link from "next/link";
 import { CarouselHome } from "@/app/ui/CarrouselHome";
 import { TopicsLinks } from "@/app/ui/TopicsLinks";
 import { Card } from "flowbite-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+
+// Interfaz para el tipo de datos de los topics
+interface Topic {
+  id: number;
+  titulo: string;
+  explicacion_tecnica: string;
+  explicacion_ejemplo: string;
+  librerias: string[];
+  created_at: string;
+}
+
+interface TopicsResponse {
+  success: boolean;
+  data: Topic[];
+  count: number;
+}
 
 export default function Home() {
+  const [topics, setTopics] = useState<Topic[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchTopics = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get<TopicsResponse>('/api/topics');
+        
+        if (response.data.success) {
+          // Limitamos a 4 topics para mantener el diseño 2x2
+          setTopics(response.data.data.slice(0, 4));
+        } else {
+          setError('Error al cargar los topics');
+        }
+      } catch (err) {
+        console.error('Error fetching topics:', err);
+        setError('Error de conexión al cargar los topics');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTopics();
+  }, []);
   const [reactCode] = useState(`import { useState } from 'react';
 
 function Counter() {
@@ -136,66 +179,10 @@ export class CounterComponent {
             </Card>
           </div>
 
-          {/* Link de navegación */}
-          <div className="lg:col-span-12 text-center mt-8">
-            <Link 
-              href="/page?id=1"
-              className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
-            >
-              Explorar comparaciones al detalle
-            </Link>
-          </div>
-
           {/* Sección de temas importantes */}
           <div className="lg:col-span-12 mt-16">
-            <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-8">
-              Temas Fundamentales
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="h-full hover:shadow-lg transition-shadow">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  Manejo de Estados
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300">
-                  Aprende sobre useState y useEffect en React, reactive data en Vue, y servicios en Angular para gestionar el estado de tu aplicación.
-                </p>
-              </Card>
-
-              <Card className="h-full hover:shadow-lg transition-shadow">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  Componentes Reutilizables
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300">
-                  Descubre cómo crear componentes modulares y reutilizables en cada framework, desde props hasta composición avanzada.
-                </p>
-              </Card>
-
-              <Card className="h-full hover:shadow-lg transition-shadow">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  Routing y Navegación
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300">
-                  Explora las soluciones de routing: Next.js App Router, Vue Router, y Angular Router para crear aplicaciones de múltiples páginas.
-                </p>
-              </Card>
-
-              <Card className="h-full hover:shadow-lg transition-shadow">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  Testing y Calidad
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300">
-                  Implementa testing efectivo con Jest, Testing Library, Vitest y Jasmine para asegurar la calidad de tu código.
-                </p>
-              </Card>
-            </div>
+            <TopicsLinks />
           </div>
-        </div>
-      </div>
-      
-      {/* Sección de Topics Links */}
-      <div className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <TopicsLinks />
         </div>
       </div>
     </div>

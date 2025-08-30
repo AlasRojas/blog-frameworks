@@ -1,8 +1,9 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Home from '../page';
 import { jest } from '@jest/globals';
+import axios from 'axios';
 
 // Mock TopicsLinks component FIRST
 jest.mock('../ui/TopicsLinks', () => {
@@ -13,22 +14,9 @@ jest.mock('../ui/TopicsLinks', () => {
 });
 
 // Mock axios
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 jest.mock('axios', () => ({
-  get: jest.fn(() => Promise.resolve({ 
-    data: { 
-      success: true, 
-      data: [
-        { 
-          id: 1, 
-          titulo: 'Test Topic', 
-          explicacion_tecnica: 'Test Description',
-          explicacion_ejemplo: 'Example explanation',
-          librerias: ['react'],
-          created_at: '2024-01-01'
-        }
-      ] 
-    } 
-  })),
+  get: jest.fn(),
 }));
 
 // Mock next/image
@@ -62,34 +50,85 @@ describe('Home Component', () => {
   });
 
   it('renders without crashing', () => {
+    mockedAxios.get.mockResolvedValue({
+      data: {
+        success: true,
+        data: []
+      }
+    });
     render(<Home />);
-    // Basic rendering test
     expect(document.body).toBeInTheDocument();
   });
 
-  it('renders the link to Page with correct attributes', () => {
+  it('handles successful API response with topics', async () => {
+    const mockTopics = [
+      {
+        id: 1,
+        titulo: 'Test Topic 1',
+        explicacion_tecnica: 'Test Description 1',
+        explicacion_ejemplo: 'Example explanation 1',
+        librerias: ['react'],
+        created_at: '2024-01-01'
+      },
+      {
+        id: 2,
+        titulo: 'Test Topic 2',
+        explicacion_tecnica: 'Test Description 2',
+        explicacion_ejemplo: 'Example explanation 2',
+        librerias: ['vue'],
+        created_at: '2024-01-02'
+      }
+    ];
+
+    mockedAxios.get.mockResolvedValue({
+      data: {
+        success: true,
+        data: mockTopics
+      }
+    });
+
     render(<Home />);
-    const link = screen.getByText('Explorar comparaciones al detalle');
-    expect(link).toBeInTheDocument();
-    expect(link).toHaveAttribute('href', '/page?id=1');
-    expect(link).toHaveClass('inline-block', 'bg-blue-600', 'hover:bg-blue-700');
+    
+    await waitFor(() => {
+      expect(screen.getByText('Test Topic 1')).toBeInTheDocument();
+      expect(screen.getByText('Test Topic 2')).toBeInTheDocument();
+    });
   });
 
-  it('renders main page elements', () => {
-    render(<Home />);
+  it('handles API response with success false', async () => {
+    mockedAxios.get.mockResolvedValue({
+      data: {
+        success: false,
+        data: []
+      }
+    });
 
-    // Check that the link is present
-    expect(screen.getByText('Explorar comparaciones al detalle')).toBeInTheDocument();
+    render(<Home />);
     
-    // Note: TopicsLinks component is tested separately in its own test file
+    await waitFor(() => {
+      expect(screen.getByText('Error al cargar los topics')).toBeInTheDocument();
+    });
   });
 
-  it('link has correct styling classes', () => {
+  it('handles API request error', async () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    mockedAxios.get.mockRejectedValue(new Error('Network error'));
+
     render(<Home />);
-    const link = screen.getByText('Explorar comparaciones al detalle');
     
-    expect(link).toHaveClass('inline-block');
-    expect(link).toHaveClass('bg-blue-600');
-    expect(link).toHaveClass('hover:bg-blue-700');
+    await waitFor(() => {
+      expect(screen.getByText('Error de conexión al cargar los topics')).toBeInTheDocument();
+    });
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith('Error fetching topics:', expect.any(Error));
+    consoleErrorSpy.mockRestore();
+  });
+
+  it('shows loading state initially', () => {
+    mockedAxios.get.mockImplementation(() => new Promise(() => {})); // Never resolves
+    
+    render(<Home />);
+    
+    expect(screen.getByText('Cargando topics...')).toBeInTheDocument();
   });
 });

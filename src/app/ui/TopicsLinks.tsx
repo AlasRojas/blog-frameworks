@@ -77,39 +77,41 @@ export function TopicsLinks() {
   return (
     <div className="w-full">
       <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-        Explora Nuestros Topics
+        Temas Fundamentales
       </h2>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {topics.map((topic) => (
-          <Card key={topic.id} className="hover:shadow-lg transition-shadow duration-300">
-            <div className="p-4">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+          <Card key={topic.id} className="h-full hover:shadow-lg transition-shadow">
+            <Link 
+              href={`/page/${topic.id}`}
+              className="inline-block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-colors duration-200"
+            >
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
                 {topic.titulo}
               </h3>
-              
-              <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                {topic.explicacion_tecnica}
-              </p>
-              
-              <div className="flex flex-wrap gap-2 mb-4">
-                {topic.librerias.map((lib, index) => (
-                  <span 
-                    key={index}
-                    className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
-                  >
-                    {lib}
-                  </span>
-                ))}
+            </Link>
+            
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
+              {topic.explicacion_tecnica}
+            </p>
+            {topic.librerias && topic.librerias.length > 0 && (
+              <div className="mt-auto">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                  Librerías relacionadas:
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {topic.librerias.map((lib, index) => (
+                    <span
+                      key={index}
+                      className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full"
+                    >
+                      {lib}
+                    </span>
+                  ))}
+                </div>
               </div>
-              
-              <Link 
-                href={`/page/${topic.id}`}
-                className="inline-block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-colors duration-200"
-              >
-                Ver Detalles
-              </Link>
-            </div>
+            )}
           </Card>
         ))}
       </div>
