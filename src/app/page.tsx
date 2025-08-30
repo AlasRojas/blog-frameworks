@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { CarouselHome } from "@/app/ui/CarrouselHome";
+import { TopicsLinks } from "@/app/ui/TopicsLinks";
 import { Card } from "flowbite-react";
 import { useState } from "react";
 
@@ -188,6 +189,13 @@ export class CounterComponent {
               </Card>
             </div>
           </div>
+        </div>
+      </div>
+      
+      {/* Sección de Topics Links */}
+      <div className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <TopicsLinks />
         </div>
       </div>
     </div>

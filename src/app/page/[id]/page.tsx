@@ -1,0 +1,237 @@
+"use client";
+
+import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
+import axios from 'axios';
+import { Card, Table } from 'flowbite-react';
+
+// Interfaz para el tipo de datos del topic
+interface Topic {
+  id: number;
+  titulo: string;
+  explicacion_tecnica: string;
+  explicacion_ejemplo: string;
+  librerias: string[];
+  table_elements: {
+    react?: {
+      similitudes: string;
+      diferencias: string;
+    };
+    vue?: {
+      similitudes: string;
+      diferencias: string;
+    };
+    angular?: {
+      similitudes: string;
+      diferencias: string;
+    };
+  };
+  code_exemple: {
+    react?: string;
+    vue?: string;
+    angular?: string;
+  };
+  created_at: string;
+}
+
+interface TopicsResponse {
+  success: boolean;
+  data: Topic[];
+  count: number;
+}
+
+export default function TopicPage() {
+  const params = useParams();
+  const topicId = params.id as string;
+  
+  const [topic, setTopic] = useState<Topic | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedFramework, setSelectedFramework] = useState<'react' | 'vue' | 'angular'>('react');
+
+  useEffect(() => {
+    const fetchTopic = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get<TopicsResponse>('/api/topics');
+        
+        if (response.data.success) {
+          const foundTopic = response.data.data.find(t => t.id === parseInt(topicId));
+          if (foundTopic) {
+            setTopic(foundTopic);
+          } else {
+            setError('Topic no encontrado');
+          }
+        } else {
+          setError('Error al cargar el topic');
+        }
+      } catch (err) {
+        console.error('Error fetching topic:', err);
+        setError('Error de conexión al cargar el topic');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (topicId) {
+      fetchTopic();
+    }
+  }, [topicId]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex justify-center items-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <span className="ml-3 text-gray-600 text-lg">Cargando topic...</span>
+      </div>
+    );
+  }
+
+  if (error || !topic) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex justify-center items-center">
+        <div className="text-center">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-red-700 max-w-md">
+            <p className="font-medium text-lg mb-2">Error:</p>
+            <p>{error || 'Topic no encontrado'}</p>
+          </div>
+          <Link 
+            href="/"
+            className="inline-block mt-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+          >
+            Volver al Inicio
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-8 max-w-screen-xl">
+      {/* Header */}
+      <div className="bg-white shadow-sm">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <Link 
+            href="/"
+            className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium mb-4"
+          >
+            ← Volver al Inicio
+          </Link>
+          <h1 className="text-5xl font-extrabold mb-8 text-center text-blue-700 dark:text-blue-400 border-b-2 border-blue-200 pb-4">{topic.titulo}</h1>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+          {/* Explicación Técnica */}
+          <Card className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+            <div className="p-6">
+              <h2 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white border-l-4 border-blue-500 pl-3">Explicación Técnica</h2>
+              <p className="text-justify text-gray-700 dark:text-gray-300 leading-relaxed">{topic.explicacion_tecnica}</p>
+            </div>
+          </Card>
+
+          {/* Explicación con Ejemplo */}
+          <Card className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+            <div className="p-6">
+              <h2 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white border-l-4 border-blue-500 pl-3">Ejemplo Práctico</h2>
+              <p className="text-justify text-gray-700 dark:text-gray-300 leading-relaxed">{topic.explicacion_ejemplo}</p>
+            </div>
+          </Card>
+      </div>
+
+        {/* Librerías */}
+        <Card className="mb-8">
+          <div className="p-6">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Librerías Relacionadas</h2>
+            <div className="flex flex-wrap gap-3">
+              {topic.librerias.map((lib, index) => (
+                <span 
+                  key={index}
+                  className="px-3 py-2 bg-blue-100 text-blue-800 text-sm font-medium rounded-full"
+                >
+                  {lib}
+                </span>
+              ))}
+            </div>
+          </div>
+        </Card>
+
+        {/* Tabla Comparativa */}
+        {topic.table_elements && Object.keys(topic.table_elements).length > 0 && (
+          <Card className="mb-8">
+            <div className="p-6">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-4">Comparación entre Frameworks</h2>
+              <div className="overflow-x-auto">
+                <Table striped hoverable>
+                  <thead>
+                    <tr>
+                      <th className="bg-gray-100 dark:bg-gray-800">Framework</th>
+                      <th>Similitudes</th>
+                      <th className="bg-gray-100 dark:bg-gray-800">Diferencias</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y dark:divide-gray-700">
+                    {Object.entries(topic.table_elements).map(([framework, data]) => (
+                      <tr key={framework} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                        <td className="whitespace-nowrap font-medium text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 capitalize">
+                          {framework}
+                        </td>
+                        <td className="text-gray-700 dark:text-gray-300">
+                          {data.similitudes}
+                        </td>
+                        <td className="bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                          {data.diferencias}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* Ejemplos de Código */}
+        {topic.code_exemple && Object.keys(topic.code_exemple).length > 0 && (
+          <Card>
+            <div className="p-6">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-4">Ejemplos de Código</h2>
+              
+              {/* Framework Selector */}
+              <div className="flex space-x-2 mb-4">
+                {Object.keys(topic.code_exemple).map((framework) => (
+                  <button
+                    key={framework}
+                    onClick={() => setSelectedFramework(framework as 'react' | 'vue' | 'angular')}
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
+                      selectedFramework === framework
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    {framework.charAt(0).toUpperCase() + framework.slice(1)}
+                  </button>
+                ))}
+              </div>
+
+              {/* Code Display */}
+              <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+                <pre className="text-green-400 text-sm">
+                  <code>{topic.code_exemple[selectedFramework] || 'Código no disponible'}</code>
+                </pre>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* Información adicional */}
+        <div className="mt-8 text-center text-gray-500 text-sm">
+          <p>Creado el: {new Date(topic.created_at).toLocaleDateString('es-ES')}</p>
+        </div>
+      </div>
+    </div>
+  );
+}

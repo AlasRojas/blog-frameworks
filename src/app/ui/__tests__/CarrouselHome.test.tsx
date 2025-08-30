@@ -20,9 +20,9 @@ jest.mock('flowbite-react', () => ({
     const [currentSlide, setCurrentSlide] = React.useState(0);
     const slides = React.Children.toArray(children);
     
-    const nextSlide = () => {
+    const nextSlide = React.useCallback(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    };
+    }, [slides.length]);
     
     const prevSlide = () => {
       setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
