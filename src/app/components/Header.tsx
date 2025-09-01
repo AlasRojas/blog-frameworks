@@ -1,11 +1,30 @@
 "use client";
 
 import ReactCountryFlag from 'react-country-flag';
+import { useLanguage } from '../hooks/useLanguage';
 
 export default function Header() {
+  const { texts, loading, error } = useLanguage();
+  
   const handleCountryClick = (country: string) => {
     console.log(country);
   };
+
+  if (loading || !texts) {
+    return (
+      <header className="bg-white shadow-sm border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex-shrink-0">
+              <h1 className="text-2xl font-bold text-gray-900 font-sans">
+                Cargando...
+              </h1>
+            </div>
+          </div>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-100">
@@ -14,14 +33,14 @@ export default function Header() {
           {/* Logo/Title */}
           <div className="flex-shrink-0">
             <h1 className="text-2xl font-bold text-gray-900 font-sans">
-              Blog Frameworks
+              {texts.header.title}
             </h1>
           </div>
 
           {/* Language/Country Selector */}
           <div className="flex space-x-3">
             <button
-              onClick={() => handleCountryClick('España')}
+              onClick={() => handleCountryClick(texts.header.flags.spain)}
               className="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 border border-transparent hover:border-gray-200"
             >
               <ReactCountryFlag countryCode="ES" svg style={{ width: '1.2em', height: '1.2em' }} />
@@ -29,7 +48,7 @@ export default function Header() {
             </button>
             
             <button
-              onClick={() => handleCountryClick('Inglaterra')}
+              onClick={() => handleCountryClick(texts.header.flags.england)}
               className="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 border border-transparent hover:border-gray-200"
             >
               <ReactCountryFlag countryCode="GB" svg style={{ width: '1.2em', height: '1.2em' }} />
@@ -37,7 +56,7 @@ export default function Header() {
             </button>
             
             <button
-              onClick={() => handleCountryClick('Francia')}
+              onClick={() => handleCountryClick(texts.header.flags.france)}
               className="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 border border-transparent hover:border-gray-200"
             >
               <ReactCountryFlag countryCode="FR" svg style={{ width: '1.2em', height: '1.2em' }} />

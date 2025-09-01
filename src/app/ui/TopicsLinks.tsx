@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
 import { Card } from 'flowbite-react';
+import { useLanguage } from '../hooks/useLanguage';
 
 // Interfaz para el tipo de datos de los topics
 interface Topic {
@@ -22,6 +23,7 @@ interface TopicsResponse {
 }
 
 export function TopicsLinks() {
+  const { texts, loading: langLoading, error: langError } = useLanguage();
   const [topics, setTopics] = useState<Topic[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,7 +54,7 @@ export function TopicsLinks() {
     return (
       <div className="flex justify-center items-center py-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        <span className="ml-2 text-gray-600">Cargando topics...</span>
+        <span className="ml-2 text-gray-600">{texts?.home.topics.loading || "Cargando topics..."}</span>
       </div>
     );
   }
@@ -60,7 +62,7 @@ export function TopicsLinks() {
   if (error) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
-        <p className="font-medium">Error:</p>
+        <p className="font-medium">{texts?.home.topics.error || "Error:"}:</p>
         <p>{error}</p>
       </div>
     );
@@ -69,7 +71,7 @@ export function TopicsLinks() {
   if (topics.length === 0) {
     return (
       <div className="text-center py-8 text-gray-500">
-        <p>No hay topics disponibles en este momento.</p>
+        <p>{texts?.home.topics.empty || "No hay topics disponibles en este momento."}</p>
       </div>
     );
   }

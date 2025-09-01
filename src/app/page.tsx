@@ -6,6 +6,7 @@ import { TopicsLinks } from "@/app/ui/TopicsLinks";
 import { Card } from "flowbite-react";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useLanguage } from "./hooks/useLanguage";
 
 // Interfaz para el tipo de datos de los topics
 interface Topic {
@@ -24,6 +25,7 @@ interface TopicsResponse {
 }
 
 export default function Home() {
+  const { texts, loading: langLoading, error: langError } = useLanguage();
   const [topics, setTopics] = useState<Topic[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -107,7 +109,7 @@ export class CounterComponent {
       <div className="w-full">
         <div className="text-center py-8">
           <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">
-            ¿Sabes usar alguno de estos frameworks de Javascript?
+            {texts?.home.carousel.title || "Cargando..."}
           </h1>
         </div>
         <CarouselHome />
@@ -119,23 +121,20 @@ export class CounterComponent {
           {/* Sección de texto explicativo */}
           <div className="lg:col-span-12">
             <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4 text-center">
-              Si tienes claridad en sus conceptos principales, prácticamente puedes usar los 3 frameworks
+              {texts?.home.explanation.subtitle || "Cargando..."}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 text-justify leading-relaxed mb-6">
-              Al tener una base de Javascript, es más sencillo aprender los conceptos básicos de cada framework.
-              Cada framework tiene sus propias sintaxis y estructuras, pero basado en estas similitudes se pueden hacer <i>traducciones</i> entre ellos sin perder su lógica interna.
-              Por ejemplo, si tienes una función en React, puedes traducirla a Vue o Angular sin perder su funcionalidad.
-              Esto te permite aprovechar las ventajas de cada framework y usar el que mejor se adapte a tu proyecto.
+              {texts?.home.explanation.description || "Cargando..."}
             </p>
           </div>
 
           {/* Título de ejemplo */}
           <div className="lg:col-span-12">
             <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-2 text-center">
-              Por ejemplo
+              {texts?.home.example.title || "Cargando..."}
             </h3>
             <p className="text-gray-600 dark:text-gray-300 text-center mb-8">
-              La estructura básica de un componente simple se ve así en cada uno de los frameworks:
+              {texts?.home.example.description || "Cargando..."}
             </p>
           </div>
 
@@ -143,7 +142,7 @@ export class CounterComponent {
           <div className="lg:col-span-4">
             <Card className="h-full">
               <h4 className="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-4 text-center">
-                React
+                {texts?.home.carousel.frameworks.react || "React"}
               </h4>
               <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto text-sm">
                 <code className="text-gray-800 dark:text-gray-200">
@@ -156,7 +155,7 @@ export class CounterComponent {
           <div className="lg:col-span-4">
             <Card className="h-full">
               <h4 className="text-lg font-semibold text-green-600 dark:text-green-400 mb-4 text-center">
-                Vue
+                {texts?.home.carousel.frameworks.vue || "Vue"}
               </h4>
               <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto text-sm">
                 <code className="text-gray-800 dark:text-gray-200">
@@ -169,7 +168,7 @@ export class CounterComponent {
           <div className="lg:col-span-4">
             <Card className="h-full">
               <h4 className="text-lg font-semibold text-red-600 dark:text-red-400 mb-4 text-center">
-                Angular
+                {texts?.home.carousel.frameworks.angular || "Angular"}
               </h4>
               <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto text-sm">
                 <code className="text-gray-800 dark:text-gray-200">

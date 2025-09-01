@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import axios from 'axios';
 import { Card, Table } from 'flowbite-react';
+import { useLanguage } from '../../hooks/useLanguage';
 
 // Interfaz para el tipo de datos del topic
 interface Topic {
@@ -42,6 +43,7 @@ interface TopicsResponse {
 }
 
 export default function TopicPage() {
+  const { texts, loading: langLoading, error: langError } = useLanguage();
   const params = useParams();
   const topicId = params.id as string;
   
@@ -61,14 +63,14 @@ export default function TopicPage() {
           if (foundTopic) {
             setTopic(foundTopic);
           } else {
-            setError('Topic no encontrado');
+            setError(texts?.topic.error.notFound || 'Topic no encontrado');
           }
         } else {
-          setError('Error al cargar el topic');
+          setError(texts?.topic.error.title || 'Error al cargar el topic');
         }
       } catch (err) {
         console.error('Error fetching topic:', err);
-        setError('Error de conexión al cargar el topic');
+        setError(texts?.topic.error.title || 'Error de conexión al cargar el topic');
       } finally {
         setLoading(false);
       }
@@ -83,7 +85,7 @@ export default function TopicPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex justify-center items-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        <span className="ml-3 text-gray-600 text-lg">Cargando topic...</span>
+        <span className="ml-3 text-gray-600 text-lg">{texts?.home.topics.loading || "Cargando topic..."}</span>
       </div>
     );
   }
@@ -93,14 +95,14 @@ export default function TopicPage() {
       <div className="min-h-screen bg-gray-50 flex justify-center items-center">
         <div className="text-center">
           <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-red-700 max-w-md">
-            <p className="font-medium text-lg mb-2">Error:</p>
-            <p>{error || 'Topic no encontrado'}</p>
+            <p className="font-medium text-lg mb-2">{texts?.topic.error.title || "Error:"}:</p>
+            <p>{error || texts?.topic.error.notFound || 'Topic no encontrado'}</p>
           </div>
           <Link 
             href="/"
             className="inline-block mt-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
           >
-            Volver al Inicio
+            {texts?.topic.error.backButton || "Volver al Inicio"}
           </Link>
         </div>
       </div>
@@ -116,7 +118,7 @@ export default function TopicPage() {
             href="/"
             className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium mb-4"
           >
-            ← Volver al Inicio
+            ← {texts?.topic.navigation.back || "Volver al Inicio"}
           </Link>
           <h1 className="text-4xl font-bold mb-6 text-center text-gray-900 dark:text-white">{topic.titulo}</h1>
         </div>
@@ -128,7 +130,7 @@ export default function TopicPage() {
           {/* Explicación Técnica */}
           <Card className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
             <div className="p-6">
-              <h2 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white border-l-4 border-blue-500 pl-3">Explicación Técnica</h2>
+              <h2 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white border-l-4 border-blue-500 pl-3">{texts?.topic.sections.technicalExplanation || "Explicación Técnica"}</h2>
               <p className="text-justify text-gray-700 dark:text-gray-300 leading-relaxed">{topic.explicacion_tecnica}</p>
             </div>
           </Card>
@@ -136,7 +138,7 @@ export default function TopicPage() {
           {/* Explicación con Ejemplo */}
           <Card className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
             <div className="p-6">
-              <h2 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white border-l-4 border-blue-500 pl-3">Ejemplo Práctico</h2>
+              <h2 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white border-l-4 border-blue-500 pl-3">{texts?.topic.sections.practicalExample || "Ejemplo Práctico"}</h2>
               <p className="text-justify text-gray-700 dark:text-gray-300 leading-relaxed">{topic.explicacion_ejemplo}</p>
             </div>
           </Card>
@@ -146,7 +148,7 @@ export default function TopicPage() {
         {topic.table_elements && Object.keys(topic.table_elements).length > 0 && (
           <Card className="mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-md">
             <div className="p-6">
-              <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white border-l-4 border-blue-500 pl-3">Comparación entre Frameworks</h2>
+              <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white border-l-4 border-blue-500 pl-3">{texts?.topic.sections.codeComparison || "Comparación entre Frameworks"}</h2>
               <div className="overflow-x-auto">
                 <div className="min-w-full bg-white dark:bg-gray-800 rounded-lg">
                   <div className="grid grid-cols-1 gap-4">
@@ -159,13 +161,13 @@ export default function TopicPage() {
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <h4 className="font-semibold text-green-700 dark:text-green-400 mb-2">✓ Similitudes</h4>
+                            <h4 className="font-semibold text-green-700 dark:text-green-400 mb-2">✓ {texts?.topic.sections.similarities || "Similitudes"}</h4>
                             <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
                               {data.similitudes}
                             </p>
                           </div>
                           <div>
-                            <h4 className="font-semibold text-orange-700 dark:text-orange-400 mb-2">⚡ Diferencias</h4>
+                            <h4 className="font-semibold text-orange-700 dark:text-orange-400 mb-2">⚡ {texts?.topic.sections.differences || "Diferencias"}</h4>
                             <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
                               {data.diferencias}
                             </p>
@@ -184,7 +186,7 @@ export default function TopicPage() {
         {topic.code_exemple && Object.keys(topic.code_exemple).length > 0 && (
           <Card>
             <div className="p-6">
-              <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white border-l-4 border-blue-500 pl-3">Librerías Relacionadas y Ejemplos Básicos de Código</h2>
+              <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white border-l-4 border-blue-500 pl-3">{texts?.topic.sections.codeComparison || "Librerías Relacionadas y Ejemplos Básicos de Código"}</h2>
               
               {/* Framework Selector */}
               <div className="flex space-x-2 mb-4">
