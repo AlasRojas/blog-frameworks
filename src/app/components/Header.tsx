@@ -1,13 +1,13 @@
 "use client";
 
 import ReactCountryFlag from 'react-country-flag';
-import { useLanguage } from '../hooks/useLanguage';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function Header() {
-  const { texts, loading, error } = useLanguage();
+  const { texts, loading, error, changeLanguage, currentLanguage } = useLanguage();
   
-  const handleCountryClick = (country: string) => {
-    console.log(country);
+  const handleLanguageChange = (language: 'es' | 'en' | 'fr') => {
+    changeLanguage(language);
   };
 
   if (loading || !texts) {
@@ -40,24 +40,36 @@ export default function Header() {
           {/* Language/Country Selector */}
           <div className="flex space-x-3">
             <button
-              onClick={() => handleCountryClick(texts.header.flags.spain)}
-              className="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 border border-transparent hover:border-gray-200"
+              onClick={() => handleLanguageChange('es')}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border ${
+                currentLanguage === 'es'
+                  ? 'bg-blue-50 text-blue-700 border-blue-200'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50 border-transparent hover:border-gray-200'
+              }`}
             >
               <ReactCountryFlag countryCode="ES" svg style={{ width: '1.2em', height: '1.2em' }} />
               <span>ES</span>
             </button>
             
             <button
-              onClick={() => handleCountryClick(texts.header.flags.england)}
-              className="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 border border-transparent hover:border-gray-200"
+              onClick={() => handleLanguageChange('en')}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border ${
+                currentLanguage === 'en'
+                  ? 'bg-blue-50 text-blue-700 border-blue-200'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50 border-transparent hover:border-gray-200'
+              }`}
             >
               <ReactCountryFlag countryCode="GB" svg style={{ width: '1.2em', height: '1.2em' }} />
               <span>EN</span>
             </button>
             
             <button
-              onClick={() => handleCountryClick(texts.header.flags.france)}
-              className="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 border border-transparent hover:border-gray-200"
+              onClick={() => handleLanguageChange('fr')}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border ${
+                currentLanguage === 'fr'
+                  ? 'bg-blue-50 text-blue-700 border-blue-200'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50 border-transparent hover:border-gray-200'
+              }`}
             >
               <ReactCountryFlag countryCode="FR" svg style={{ width: '1.2em', height: '1.2em' }} />
               <span>FR</span>
