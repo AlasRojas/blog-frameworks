@@ -1,0 +1,57 @@
+{
+  "header": {
+    "title": "Blog Frameworks",
+    "flags": {
+      "england": "Angleterre",
+      "france": "France",
+      "spain": "Espagne"
+    }
+  },
+  "home": {
+    "carousel": {
+      "title": "Savez-vous utiliser l'un de ces frameworks Javascript?",
+      "frameworks": {
+        "angular": "Angular",
+        "react": "React",
+        "vue": "Vue"
+      }
+    },
+    "explanation": {
+      "subtitle": "Si vous maîtrisez leurs concepts principaux, vous pouvez pratiquement utiliser les 3 frameworks",
+      "description": "Avoir une base en Javascript facilite l'apprentissage des concepts de base de chaque framework. Chaque framework a sa propre syntaxe et ses structures, mais basé sur ces similitudes, vous pouvez faire des traductions entre eux sans perdre leur logique interne. Par exemple, si vous avez une fonction en React, vous pouvez la traduire en Vue ou Angular sans perdre sa fonctionnalité. Cela vous permet de profiter des avantages de chaque framework et d'utiliser celui qui convient le mieux à votre projet."
+    },
+    "example": {
+      "title": "Par exemple",
+      "description": "La structure de base d'un composant simple ressemble à ceci dans chacun des frameworks:"
+    },
+    "topics": {
+      "loading": "Chargement des sujets...",
+      "error": "Erreur de connexion lors du chargement des sujets",
+      "empty": "Aucun sujet disponible"
+    }
+  },
+  "topic": {
+    "navigation": {
+      "back": "← Retour à l'accueil"
+    },
+    "error": {
+      "title": "Erreur:",
+      "notFound": "Sujet non trouvé",
+      "backButton": "Retour à l'accueil"
+    },
+    "sections": {
+      "technicalExplanation": "Explication Technique",
+      "practicalExample": "Exemple Pratique",
+      "codeComparison": "Comparaison de Code",
+      "similarities": "Similitudes",
+      "differences": "Différences"
+    }
+  },
+  "modal": {
+    "title": "Conditions d'utilisation"
+  },
+  "metadata": {
+    "title": "Create Next App",
+    "description": "Généré par create next app"
+  }
+}
