@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import axios from 'axios';
-import { Card, Table } from 'flowbite-react';
-import { useLanguage } from '../../hooks/useLanguage';
+import { Card } from 'flowbite-react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 // Interfaz para el tipo de datos del topic
 interface Topic {
@@ -43,7 +43,7 @@ interface TopicsResponse {
 }
 
 export default function TopicPage() {
-  const { texts, loading: langLoading, error: langError } = useLanguage();
+  const { texts } = useLanguage();
   const params = useParams();
   const topicId = params.id as string;
   
@@ -68,8 +68,7 @@ export default function TopicPage() {
         } else {
           setError(texts?.topic.error.title || 'Error al cargar el topic');
         }
-      } catch (err) {
-        console.error('Error fetching topic:', err);
+      } catch {
         setError(texts?.topic.error.title || 'Error de conexión al cargar el topic');
       } finally {
         setLoading(false);
@@ -79,7 +78,7 @@ export default function TopicPage() {
     if (topicId) {
       fetchTopic();
     }
-  }, [topicId]);
+  }, [topicId, texts?.topic.error.notFound, texts?.topic.error.title]);
 
   if (loading) {
     return (

@@ -121,7 +121,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
 
   useEffect(() => {
     loadLanguage(currentLanguage);
-  }, []);
+  }, [currentLanguage]);
 
   const value: LanguageContextType = {
     currentLanguage,

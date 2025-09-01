@@ -1,57 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import { CarouselHome } from "@/app/ui/CarrouselHome";
 import { TopicsLinks } from "@/app/ui/TopicsLinks";
 import { Card } from "flowbite-react";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { useLanguage } from "./hooks/useLanguage";
-
-// Interfaz para el tipo de datos de los topics
-interface Topic {
-  id: number;
-  titulo: string;
-  explicacion_tecnica: string;
-  explicacion_ejemplo: string;
-  librerias: string[];
-  created_at: string;
-}
-
-interface TopicsResponse {
-  success: boolean;
-  data: Topic[];
-  count: number;
-}
+import { useState } from "react";
+import { useLanguage } from "./contexts/LanguageContext";
 
 export default function Home() {
-  const { texts, loading: langLoading, error: langError } = useLanguage();
-  const [topics, setTopics] = useState<Topic[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchTopics = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get<TopicsResponse>('/api/topics');
-        
-        if (response.data.success) {
-          // Limitamos a 4 topics para mantener el diseño 2x2
-          setTopics(response.data.data.slice(0, 4));
-        } else {
-          setError('Error al cargar los topics');
-        }
-      } catch (err) {
-        console.error('Error fetching topics:', err);
-        setError('Error de conexión al cargar los topics');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTopics();
-  }, []);
+  const { texts } = useLanguage();
   const [reactCode] = useState(`import { useState } from 'react';
 
 function Counter() {

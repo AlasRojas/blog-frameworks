@@ -4,7 +4,7 @@ import ReactCountryFlag from 'react-country-flag';
 import { useLanguage } from '../contexts/LanguageContext';
 
 export default function Header() {
-  const { texts, loading, error, changeLanguage, currentLanguage } = useLanguage();
+  const { texts, loading, changeLanguage, currentLanguage } = useLanguage();
   
   const handleLanguageChange = (language: 'es' | 'en' | 'fr') => {
     changeLanguage(language);

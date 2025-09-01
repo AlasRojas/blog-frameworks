@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
 import { Card } from 'flowbite-react';
-import { useLanguage } from '../hooks/useLanguage';
+import { useLanguage } from '../contexts/LanguageContext';
 
 // Interfaz para el tipo de datos de los topics
 interface Topic {
@@ -23,7 +23,7 @@ interface TopicsResponse {
 }
 
 export function TopicsLinks() {
-  const { texts, loading: langLoading, error: langError } = useLanguage();
+  const { texts } = useLanguage();
   const [topics, setTopics] = useState<Topic[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
