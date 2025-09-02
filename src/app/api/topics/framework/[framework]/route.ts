@@ -11,7 +11,7 @@ export async function GET(
     const framework = frameworkParam.toLowerCase();
     
     // Validar que el framework sea válido
-    const validFrameworks = ['react', 'vue', 'angular'];
+    const validFrameworks = ['react', 'vue', 'angular', 'svelte'];
     if (!validFrameworks.includes(framework)) {
       return NextResponse.json(
         { 

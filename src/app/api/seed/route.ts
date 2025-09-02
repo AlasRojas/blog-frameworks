@@ -4,6 +4,7 @@ import { createTopicsTable, createTopic, getAllTopics } from '@/lib/db';
 // Datos de ejemplo para poblar la base de datos
 const sampleTopics = [
   {
+    slug: "manejo-de-estados",
     titulo: "Manejo de Estados",
     explicacion_tecnica: "El manejo de estados se refiere a cómo una aplicación gestiona y actualiza los datos que cambian a lo largo del tiempo. Cada framework tiene su propio enfoque para manejar el estado local y global.",
     explicacion_ejemplo: "Imagina el estado como el 'humor' de una persona. Así como el humor puede cambiar según los eventos del día (café por la mañana = feliz, tráfico = molesto), el estado de una aplicación cambia según las acciones del usuario (click en botón, escribir en formulario, etc.).",
@@ -32,6 +33,7 @@ const sampleTopics = [
     childs: ["useState", "useReducer", "Context API"]
   },
   {
+    slug: "componentes-reutilizables",
     titulo: "Componentes Reutilizables",
     explicacion_tecnica: "Los componentes son bloques de construcción reutilizables que encapsulan lógica, estado y presentación. Permiten crear interfaces modulares y mantenibles.",
     explicacion_ejemplo: "Los componentes son como piezas de LEGO. Cada pieza tiene una forma y función específica, pero puedes combinarlas de diferentes maneras para crear estructuras más complejas. Un botón es una pieza, un formulario es otra, y juntos forman una página completa.",
@@ -60,6 +62,7 @@ const sampleTopics = [
     childs: ["Props", "Events", "Slots/Children"]
   },
   {
+    slug: "routing-y-navegacion",
     titulo: "Routing y Navegación",
     explicacion_tecnica: "El routing permite crear aplicaciones de múltiples páginas (SPA) manejando la navegación entre diferentes vistas sin recargar la página completa.",
     explicacion_ejemplo: "El routing es como el sistema de navegación de un centro comercial. Tienes un mapa (rutas) que te dice cómo llegar a diferentes tiendas (páginas) sin salir del edificio (aplicación). Puedes ir de la tienda de ropa a la de comida siguiendo las señales, pero sigues dentro del mismo lugar.",
