@@ -243,4 +243,23 @@ describe('TopicsLinks', () => {
       expect(actionButtons[1]).toHaveAttribute('href', '/page/vue-advanced')
     })
   })
+
+  it('handles API response with success: false', async () => {
+    mockedAxios.get.mockResolvedValueOnce({
+      data: {
+        success: false,
+        data: []
+      }
+    })
+    
+    render(
+      <TestWrapper>
+        <TopicsLinks />
+      </TestWrapper>
+    )
+    
+    await waitFor(() => {
+      expect(screen.getByText('Error al cargar los topics')).toBeInTheDocument()
+    })
+  })
 })

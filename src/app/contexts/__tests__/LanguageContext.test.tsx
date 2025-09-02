@@ -119,4 +119,29 @@ describe('LanguageContext', () => {
       'useLanguage must be used within a LanguageProvider'
     )
   })
+
+  it('provides changeLanguage function', () => {
+    const TestComponentWithChangeLanguage = () => {
+      const { changeLanguage } = useLanguage()
+      
+      return (
+        <div>
+          <button 
+            data-testid="change-language-btn" 
+            onClick={() => changeLanguage('en')}
+          >
+            Change to English
+          </button>
+        </div>
+      )
+    }
+
+    render(
+      <LanguageProvider>
+        <TestComponentWithChangeLanguage />
+      </LanguageProvider>
+    )
+
+    expect(screen.getByTestId('change-language-btn')).toBeInTheDocument()
+  })
 })
