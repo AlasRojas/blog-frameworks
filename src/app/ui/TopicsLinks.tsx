@@ -5,25 +5,10 @@ import Link from 'next/link';
 import axios from 'axios';
 import { Card } from 'flowbite-react';
 import { useLanguage } from '../contexts/LanguageContext';
-
-// Interfaz para el tipo de datos de los topics
-interface Topic {
-  id: number;
-  titulo: string;
-  explicacion_tecnica: string;
-  explicacion_ejemplo: string;
-  librerias: string[];
-  created_at: string;
-}
-
-interface TopicsResponse {
-  success: boolean;
-  data: Topic[];
-  count: number;
-}
+import { Topic, TopicsResponse } from '../../types/topics';
 
 export function TopicsLinks() {
-  const { texts } = useLanguage();
+  const { texts, currentLanguage } = useLanguage();
   const [topics, setTopics] = useState<Topic[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -83,39 +68,69 @@ export function TopicsLinks() {
       </h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {topics.map((topic) => (
-          <Card key={topic.id} className="h-full hover:shadow-lg transition-shadow">
-            <Link 
-              href={`/page/${topic.id}`}
-              className="inline-block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-colors duration-200"
-            >
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                {topic.titulo}
-              </h3>
-            </Link>
-            
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
-              {topic.explicacion_tecnica}
-            </p>
-            {topic.librerias && topic.librerias.length > 0 && (
-              <div className="mt-auto">
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                  Librerías relacionadas:
+        {topics.map((topic) => {
+          const currentTranslation = topic.translations?.[currentLanguage] || topic.translations?.['es'] || (topic.translations && topic.translations[Object.keys(topic.translations)[0]]) || {};
+          
+          return (
+            <Card key={topic.id} className="h-full hover:shadow-lg transition-shadow">
+              <div className="flex flex-col h-full">
+                <Link 
+                  href={`/page/${topic.slug}`}
+                  className="block mb-4"
+                >
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3 hover:text-blue-600 transition-colors">
+                    {currentTranslation?.title || `Topic ${topic.id}`}
+                  </h3>
+                </Link>
+                
+                <p className="text-gray-600 dark:text-gray-300 mb-4 flex-grow">
+                  {currentTranslation?.description || 'No description available'}
                 </p>
-                <div className="flex flex-wrap gap-2">
-                  {topic.librerias.map((lib, index) => (
-                    <span
-                      key={index}
-                      className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full"
-                    >
-                      {lib}
+                
+                <div className="mt-auto space-y-3">
+                  {/* Difficulty and Time */}
+                  <div className="flex items-center justify-between text-sm text-gray-500">
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      topic.difficulty_level === 'beginner' ? 'bg-green-100 text-green-800' :
+                      topic.difficulty_level === 'intermediate' ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-red-100 text-red-800'
+                    }`}>
+                      {topic.difficulty_level}
                     </span>
-                  ))}
+                    <span className="text-gray-400">{topic.estimated_time}</span>
+                  </div>
+                  
+                  {/* Frameworks */}
+                  {topic.frameworks && topic.frameworks.length > 0 && (
+                    <div>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                        Frameworks:
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {topic.frameworks.map((framework, index) => (
+                          <span
+                            key={index}
+                            className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full"
+                          >
+                            {framework}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Action Button */}
+                  <Link 
+                    href={`/page/${topic.slug}`}
+                    className="inline-block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-colors duration-200"
+                  >
+                    Ver detalles
+                  </Link>
                 </div>
               </div>
-            )}
-          </Card>
-        ))}
+            </Card>
+          );
+        })}
       </div>
     </div>
   );

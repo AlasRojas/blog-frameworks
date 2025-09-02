@@ -1,54 +1,73 @@
-import { jest } from '@jest/globals';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import { CarouselHome } from '../CarrouselHome'
 
-// Mock the entire CarouselHome component
-const mockCarouselHome = jest.fn(() => (
-  <div data-testid="carousel-container">
-    <div>Angular</div>
-    <div>React</div>
-    <div>Vue</div>
-  </div>
-));
+// Mock flowbite-react Carousel component
+vi.mock('flowbite-react', () => ({
+  Carousel: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="carousel-mock">{children}</div>
+  ),
+}))
 
-jest.mock('../CarrouselHome', () => ({
-  __esModule: true,
-  CarouselHome: mockCarouselHome
-}));
-
-// Import after mocks
-import { CarouselHome } from '../CarrouselHome';
-
-describe('CarouselHome Component', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('can be imported without errors', () => {
-    expect(CarouselHome).toBeDefined();
-  });
-
-  it('exports CarouselHome function', () => {
-    expect(typeof CarouselHome).toBe('function');
-  });
-
+describe('CarouselHome', () => {
   it('renders without crashing', () => {
-    expect(() => {
-      render(<CarouselHome />);
-    }).not.toThrow();
-  });
+    render(<CarouselHome />)
+    expect(screen.getByTestId('carousel-mock')).toBeInTheDocument()
+  })
 
-  it('component structure is valid', () => {
-    const result = CarouselHome();
-    expect(result).toBeDefined();
-    expect(typeof result).toBe('object');
-  });
+  it('displays Angular framework slide', () => {
+    render(<CarouselHome />)
+    expect(screen.getByText('Angular')).toBeInTheDocument()
+  })
 
-  it('component can be called multiple times', () => {
-    expect(() => {
-      CarouselHome();
-      CarouselHome();
-    }).not.toThrow();
-  });
+  it('displays React framework slide', () => {
+    render(<CarouselHome />)
+    expect(screen.getByText('React')).toBeInTheDocument()
+  })
 
+  it('displays Vue framework slide', () => {
+    render(<CarouselHome />)
+    expect(screen.getByText('Vue')).toBeInTheDocument()
+  })
 
-});
+  it('has correct CSS classes for container', () => {
+    render(<CarouselHome />)
+    const container = screen.getByTestId('carousel-mock').parentElement
+    expect(container).toHaveClass('relative', 'h-56', 'sm:h-64', 'xl:h-80', '2xl:h-96', 'rounded-lg')
+  })
+
+  it('displays framework icons with correct classes', () => {
+    render(<CarouselHome />)
+    
+    // Check for Angular icon
+    const angularIcon = document.querySelector('.fab.fa-angular')
+    expect(angularIcon).toBeInTheDocument()
+    expect(angularIcon).toHaveClass('text-6xl', 'text-white')
+    
+    // Check for React icon
+    const reactIcon = document.querySelector('.fab.fa-react')
+    expect(reactIcon).toBeInTheDocument()
+    expect(reactIcon).toHaveClass('text-6xl', 'text-white')
+    
+    // Check for Vue icon
+    const vueIcon = document.querySelector('.fab.fa-vuejs')
+    expect(vueIcon).toBeInTheDocument()
+    expect(vueIcon).toHaveClass('text-6xl', 'text-white')
+  })
+
+  it('has correct gradient backgrounds for each slide', () => {
+    render(<CarouselHome />)
+    
+    // Angular slide - red gradient
+    const angularSlide = screen.getByText('Angular').closest('.bg-gradient-to-r')
+    expect(angularSlide).toHaveClass('bg-gradient-to-r', 'from-red-600', 'to-red-400')
+    
+    // React slide - blue gradient
+    const reactSlide = screen.getByText('React').closest('.bg-gradient-to-r')
+    expect(reactSlide).toHaveClass('bg-gradient-to-r', 'from-cyan-400', 'to-blue-500')
+    
+    // Vue slide - green gradient
+    const vueSlide = screen.getByText('Vue').closest('.bg-gradient-to-r')
+    expect(vueSlide).toHaveClass('bg-gradient-to-r', 'from-green-400', 'to-green-600')
+  })
+})
