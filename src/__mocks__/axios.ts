@@ -1,4 +1,25 @@
-const mockAxios: any = {
+interface MockAxios {
+  get: jest.Mock;
+  post: jest.Mock;
+  put: jest.Mock;
+  delete: jest.Mock;
+  create: jest.Mock;
+  defaults: {
+    adapter: Record<string, unknown>;
+  };
+  interceptors: {
+    request: {
+      use: jest.Mock;
+      eject: jest.Mock;
+    };
+    response: {
+      use: jest.Mock;
+      eject: jest.Mock;
+    };
+  };
+}
+
+const mockAxios: MockAxios = {
   get: jest.fn(() => Promise.resolve({ data: { success: true, data: [] } })),
   post: jest.fn(() => Promise.resolve({ data: {} })),
   put: jest.fn(() => Promise.resolve({ data: {} })),

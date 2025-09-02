@@ -1,8 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Mock @vercel/postgres
-const mockSqlFunction = vi.fn();
-const mockSqlQuery = vi.fn();
 
 vi.mock('@vercel/postgres', () => ({
   sql: Object.assign(vi.fn(), {
@@ -26,7 +24,7 @@ import {
 import { sql } from '@vercel/postgres';
 
 // Get references to the mocked functions
-const mockSql = sql as any;
+const mockSql = sql as vi.MockedFunction<typeof sql> & { query: vi.MockedFunction<(...args: unknown[]) => Promise<unknown>> };
 const mockSqlQueryRef = mockSql.query;
 
 // Mock console methods

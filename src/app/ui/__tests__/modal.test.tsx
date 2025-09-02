@@ -97,7 +97,7 @@ describe('ModalComponent', () => {
         </div>
       );
       
-      render(<ModalComponent {...defaultProps} children={complexChildren} />);
+      render(<ModalComponent {...defaultProps}>{complexChildren}</ModalComponent>);
       
       expect(screen.getByText('Complex Content')).toBeInTheDocument();
       expect(screen.getByText('This is a paragraph')).toBeInTheDocument();
@@ -105,13 +105,13 @@ describe('ModalComponent', () => {
     });
 
     it('debe manejar children como string', () => {
-      render(<ModalComponent {...defaultProps} children="Simple text content" />);
+      render(<ModalComponent {...defaultProps}>Simple text content</ModalComponent>);
       
       expect(screen.getByText('Simple text content')).toBeInTheDocument();
     });
 
     it('debe manejar children vacío', () => {
-      render(<ModalComponent {...defaultProps} children={null} />);
+      render(<ModalComponent {...defaultProps}>{null}</ModalComponent>);
       
       expect(screen.getByTestId('modal-body')).toBeInTheDocument();
       expect(screen.getByTestId('modal-container')).toBeInTheDocument();
@@ -185,7 +185,7 @@ describe('ModalComponent', () => {
     it('debe manejar handleClose undefined sin errores', () => {
       const propsWithoutHandler = {
         isOpen: true,
-        handleClose: undefined as any,
+        handleClose: undefined as (() => void) | undefined,
         children: <div>Test content</div>
       };
       
@@ -198,7 +198,7 @@ describe('ModalComponent', () => {
       const propsWithoutChildren = {
         isOpen: true,
         handleClose: mockHandleClose,
-        children: undefined as any
+        children: undefined as React.ReactNode
       };
       
       expect(() => {

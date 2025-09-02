@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { Topic, TopicTranslation, FrameworkDetail } from '@/types/topics';
+import type { Topic, TopicTranslation } from '@/types/topics';
 
 // Utility functions for topics data transformation
 // These functions simulate the logic found in TopicsLinks.tsx and other components
@@ -133,7 +133,7 @@ export function sortTopicsByDate(
  * @param topic - Topic object to validate
  * @returns Validation result
  */
-export function validateTopicData(topic: any): {
+export function validateTopicData(topic: unknown): {
   isValid: boolean;
   errors: string[];
 } {
@@ -237,7 +237,7 @@ describe('Topics Utils', () => {
     it('should handle missing translations property', () => {
       const topicWithoutTranslations = {
         ...mockTopic,
-        translations: undefined as any
+        translations: undefined as undefined
       };
       const result = getCurrentTranslation(topicWithoutTranslations, 'en');
       expect(result).toEqual({});
@@ -323,7 +323,7 @@ describe('Topics Utils', () => {
       const topicsWithoutFrameworks = [
         {
           ...mockTopic,
-          frameworks: undefined as any
+          frameworks: undefined as undefined
         }
       ];
       const result = filterTopicsByFramework(topicsWithoutFrameworks, 'react');
