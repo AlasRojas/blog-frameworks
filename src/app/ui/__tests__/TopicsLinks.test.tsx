@@ -50,15 +50,7 @@ const mockTopics: Topic[] = [
   }
 ]
 
-const mockTexts = {
-  home: {
-    topics: {
-      loading: 'Cargando topics...',
-      error: 'Error',
-      empty: 'No hay topics disponibles'
-    }
-  }
-}
+
 
 // Wrapper component with LanguageProvider
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (

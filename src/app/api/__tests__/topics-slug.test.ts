@@ -52,7 +52,7 @@ describe('/api/topics/slug/[slug]', () => {
     it('should return topic by slug successfully', async () => {
       mockSql.mockResolvedValue({
         rows: [mockTopic]
-      } as any)
+      } as { rows: typeof mockTopic[] })
 
       const response = await GET(
         new NextRequest('http://localhost:3000/api/topics/slug/test-topic'),
@@ -76,7 +76,7 @@ describe('/api/topics/slug/[slug]', () => {
     it('should return 404 when topic not found', async () => {
       mockSql.mockResolvedValue({
         rows: []
-      } as any)
+      } as { rows: never[] })
 
       const response = await GET(
         new NextRequest('http://localhost:3000/api/topics/slug/nonexistent'),
@@ -131,7 +131,7 @@ describe('/api/topics/slug/[slug]', () => {
 
       mockSql.mockResolvedValue({
         rows: [topicWithNulls]
-      } as any)
+      } as { rows: Array<typeof topicWithNulls> })
 
       const response = await GET(
         new NextRequest('http://localhost:3000/api/topics/slug/test-topic'),
@@ -154,7 +154,7 @@ describe('/api/topics/slug/[slug]', () => {
 
       mockSql.mockResolvedValue({
         rows: [topicWithObjects]
-      } as any)
+      } as { rows: Array<typeof topicWithObjects> })
 
       const response = await GET(
         new NextRequest('http://localhost:3000/api/topics/slug/test-topic'),
@@ -178,7 +178,7 @@ describe('/api/topics/slug/[slug]', () => {
 
       mockSql.mockResolvedValue({
         rows: [topicWithBadJson]
-      } as any)
+      } as { rows: Array<typeof topicWithBadJson> })
 
       const response = await GET(
         new NextRequest('http://localhost:3000/api/topics/slug/test-topic'),

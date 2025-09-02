@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createTopicsTable, createTopic, getAllTopics, sql } from '@/lib/db';
+import { createTopicsTable, createTopic, getAllTopics, clearDatabase, sql } from '@/lib/db';
 
 // Datos de ejemplo para poblar la base de datos con nueva estructura
 const sampleTopics = [
