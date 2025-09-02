@@ -40,10 +40,7 @@ export default defineConfig({
           lines: 85,
           statements: 85
         }
-      },
-      // Fail the build if coverage thresholds are not met
-      thresholdAutoUpdate: false,
-      skipFull: false
+      }
     }
   },
   resolve: {
