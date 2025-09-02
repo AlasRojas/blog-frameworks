@@ -2,13 +2,34 @@ import { sql } from '@vercel/postgres';
 
 export { sql };
 
+// Función para limpiar completamente la base de datos
+export async function clearDatabase() {
+  try {
+    console.log('🗑️ Limpiando base de datos...');
+    await sql`DROP TABLE IF EXISTS topics CASCADE`;
+    console.log('✅ Base de datos limpiada exitosamente');
+    return { success: true };
+  } catch (error) {
+    console.error('Error limpiando base de datos:', error);
+    throw error;
+  }
+}
+
 // Función para crear la tabla topics si no existe
 export async function createTopicsTable() {
   try {
-    // Primero crear la tabla básica si no existe
+    // Crear la tabla con todas las columnas necesarias
     await sql`
       CREATE TABLE IF NOT EXISTS topics (
         id SERIAL PRIMARY KEY,
+        slug VARCHAR(255) UNIQUE,
+        frameworks JSONB DEFAULT '[]'::jsonb,
+        difficulty_level VARCHAR(50) DEFAULT 'intermediate',
+        estimated_time VARCHAR(50) DEFAULT '20 min',
+        parent_id INTEGER,
+        child_topics JSONB DEFAULT '[]'::jsonb,
+        translations JSONB DEFAULT '{}'::jsonb,
+        framework_details JSONB DEFAULT '{}'::jsonb,
         titulo VARCHAR(255),
         explicacion_tecnica TEXT,
         explicacion_ejemplo TEXT,
@@ -23,67 +44,9 @@ export async function createTopicsTable() {
       )
     `;
     
-    // Luego agregar las nuevas columnas si no existen
-    await addNewColumnsIfNotExist();
-    
     return { success: true };
   } catch (error) {
     console.error('Error creating topics table:', error);
-    throw error;
-  }
-}
-
-// Función para agregar nuevas columnas a la tabla existente
-export async function addNewColumnsIfNotExist() {
-  try {
-    // Verificar y agregar cada columna nueva individualmente
-    const columns = [
-      'slug VARCHAR(255)',
-      'frameworks JSONB DEFAULT \'[]\'::jsonb',
-      'difficulty_level VARCHAR(50) DEFAULT \'intermediate\'',
-      'estimated_time VARCHAR(50) DEFAULT \'20 min\'',
-      'parent_id INTEGER',
-      'child_topics JSONB DEFAULT \'[]\'::jsonb',
-      'translations JSONB DEFAULT \'{}\'::jsonb',
-       'framework_details JSONB DEFAULT \'{}\'::jsonb'
-    ];
-    
-    console.log('Starting column migration...');
-    
-    for (const columnDef of columns) {
-      const columnName = columnDef.split(' ')[0];
-      try {
-        // Verificar si la columna ya existe
-        const checkResult = await sql`
-          SELECT column_name 
-          FROM information_schema.columns 
-          WHERE table_name = 'topics' AND column_name = ${columnName}
-        `;
-        
-        if (checkResult.rows.length === 0) {
-            // Usar sql.query para consultas dinámicas
-            const query = `ALTER TABLE topics ADD COLUMN ${columnDef}`;
-            await sql.query(query);
-            console.log(`✓ Added column: ${columnName}`);
-          } else {
-            console.log(`- Column already exists: ${columnName}`);
-          }
-      } catch (columnError: any) {
-        console.error(`✗ Error adding column ${columnName}:`, columnError.message);
-      }
-    }
-    
-    // Agregar índice único para slug si no existe (después de agregar las columnas)
-    try {
-      await sql`CREATE UNIQUE INDEX IF NOT EXISTS topics_slug_idx ON topics(slug)`;
-      console.log('Created unique index on slug column');
-    } catch (indexError) {
-      console.log('Index might already exist:', indexError);
-    }
-    
-    return { success: true };
-  } catch (error) {
-    console.error('Error adding new columns:', error);
     throw error;
   }
 }
@@ -132,6 +95,24 @@ export async function createTopic(topicData: {
   childs?: string[];
 }) {
   try {
+    // Extraer título del objeto translations si existe
+    const titulo = topicData.titulo || 
+      (topicData.translations && (topicData.translations as any).es?.title) || 
+      (topicData.translations && (topicData.translations as any).en?.title) || 
+      '';
+    
+    // Extraer descripción del objeto translations si existe
+    const explicacion_tecnica = topicData.explicacion_tecnica || 
+      (topicData.translations && (topicData.translations as any).es?.description) || 
+      (topicData.translations && (topicData.translations as any).en?.description) || 
+      '';
+    
+    // Extraer analogía del objeto translations si existe
+    const explicacion_ejemplo = topicData.explicacion_ejemplo || 
+      (topicData.translations && (topicData.translations as any).es?.analogy) || 
+      (topicData.translations && (topicData.translations as any).en?.analogy) || 
+      '';
+    
     const { rows } = await sql`
       INSERT INTO topics (
         slug,
@@ -160,15 +141,15 @@ export async function createTopic(topicData: {
         ${JSON.stringify(topicData.child_topics || [])},
         ${JSON.stringify(topicData.translations || {})},
         ${JSON.stringify(topicData.framework_details || {})},
-        ${topicData.titulo || ''},
-        ${topicData.explicacion_tecnica || ''},
-        ${topicData.explicacion_ejemplo || ''},
+        ${titulo},
+        ${explicacion_tecnica},
+        ${explicacion_ejemplo},
         ${topicData.image_explicacion || ''},
-        ${JSON.stringify(topicData.librerias || [])},
-        ${JSON.stringify(topicData.table_elements || {})},
-        ${JSON.stringify(topicData.code_exemple || {})},
+        ${JSON.stringify(topicData.frameworks || topicData.librerias || [])},
+        ${JSON.stringify(topicData.framework_details || topicData.table_elements || {})},
+        ${JSON.stringify(topicData.framework_details || topicData.code_exemple || {})},
         ${topicData.parent || ''},
-        ${JSON.stringify(topicData.childs || [])}
+        ${JSON.stringify(topicData.child_topics || topicData.childs || [])}
       ) RETURNING *
     `;
     return rows[0];

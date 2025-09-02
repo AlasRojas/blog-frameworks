@@ -11,7 +11,7 @@ import { Topic, TopicResponse } from '../../../types/topics';
 export default function TopicPage() {
   const { texts, currentLanguage } = useLanguage();
   const params = useParams();
-  const topicSlug = params.id as string; // This is actually a slug now
+  const topicSlug = params.slug as string;
   
   const [topic, setTopic] = useState<Topic | null>(null);
   const [loading, setLoading] = useState(true);
@@ -73,7 +73,9 @@ export default function TopicPage() {
     );
   }
 
-  const currentTranslation = topic.translations[currentLanguage] || topic.translations['es'] || topic.translations[Object.keys(topic.translations)[0]];
+  const currentTranslation = topic.translations?.[currentLanguage] || topic.translations?.['es'] || (topic.translations && topic.translations[Object.keys(topic.translations)[0]]) || {};
+
+  console.log("currentTranslation", currentTranslation, currentTranslation?.title)
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-screen-xl">
@@ -140,7 +142,7 @@ export default function TopicPage() {
                 <div className="min-w-full bg-white dark:bg-gray-800 rounded-lg">
                   <div className="grid grid-cols-1 gap-4">
                     {Object.entries(topic.framework_details).map(([framework, details]) => {
-                      const frameworkTranslation = details.translations[currentLanguage] || details.translations['es'] || details.translations[Object.keys(details.translations)[0]];
+                      const frameworkTranslation = details.translations?.[currentLanguage] || details.translations?.['es'] || (details.translations && details.translations[Object.keys(details.translations)[0]]) || {};
                       return (
                         <div key={framework} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow">
                           <div className="mb-3">

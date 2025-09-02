@@ -69,7 +69,7 @@ export function TopicsLinks() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {topics.map((topic) => {
-          const currentTranslation = topic.translations[currentLanguage] || topic.translations['es'] || topic.translations[Object.keys(topic.translations)[0]];
+          const currentTranslation = topic.translations?.[currentLanguage] || topic.translations?.['es'] || (topic.translations && topic.translations[Object.keys(topic.translations)[0]]) || {};
           
           return (
             <Card key={topic.id} className="h-full hover:shadow-lg transition-shadow">
