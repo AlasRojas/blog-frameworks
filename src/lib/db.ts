@@ -1,4 +1,5 @@
 import { sql } from '@vercel/postgres';
+import type { TopicTranslation } from '@/types/topics';
 
 export { sql };
 
@@ -96,21 +97,22 @@ export async function createTopic(topicData: {
 }) {
   try {
     // Extraer título del objeto translations si existe
+    const translations = topicData.translations as Record<string, TopicTranslation> | undefined;
     const titulo = topicData.titulo || 
-      (topicData.translations && (topicData.translations as any).es?.title) || 
-      (topicData.translations && (topicData.translations as any).en?.title) || 
+      translations?.es?.title || 
+      translations?.en?.title || 
       '';
     
     // Extraer descripción del objeto translations si existe
     const explicacion_tecnica = topicData.explicacion_tecnica || 
-      (topicData.translations && (topicData.translations as any).es?.description) || 
-      (topicData.translations && (topicData.translations as any).en?.description) || 
+      translations?.es?.description || 
+      translations?.en?.description || 
       '';
     
     // Extraer analogía del objeto translations si existe
     const explicacion_ejemplo = topicData.explicacion_ejemplo || 
-      (topicData.translations && (topicData.translations as any).es?.analogy) || 
-      (topicData.translations && (topicData.translations as any).en?.analogy) || 
+      translations?.es?.analogy || 
+      translations?.en?.analogy || 
       '';
     
     const { rows } = await sql`
